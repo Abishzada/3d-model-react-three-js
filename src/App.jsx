@@ -51,12 +51,12 @@ function App() {
   }
 
   const handleClick = (event) => {
-    // const material = useMaterial(modelRef, gltf.nodes.YourMaterialName); // Replace 'YourMaterialName' with the actual material name you want to change
-    console.log('123', event, modelRef.current);
-    console.log('objectsToIntersect', objectsToIntersect);
-    if (modelRef.current) {
-      modelRef.current.material.color.set(Math.random() * 0xffffff); // Set a random color
-    }
+    const { uuid } = event.object
+    objectsToIntersect?.map(v => {
+      if (uuid === v?.uuid) v.material.color.set(Math.random() * 0xffffff);
+      if (uuid === v?.uuid) console.log('clicked obj', v);
+    })
+
   };
 
 
@@ -64,37 +64,16 @@ function App() {
     setOpenInsert(false)
   }
 
-  // const onMouseClick = (event) => {
-  //   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  //   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  //   raycaster.setFromCamera(mouse, camera);
-  //   console.log('objectsToIntersect', objectsToIntersect);
-  //   const intersects = raycaster.intersectObjects(objectsToIntersect);
-  //   setTimeout(() => {
-  //     console.log(intersects, objectsToIntersect);
-  //     if (intersects.length > 0) {
-  //       const clickedObject = intersects[0].object;
-
-  //       clickedObject.material.color.set(0xff0000);
-  //       alert('You clicked on an object!');
-  //     }
-  //   }, 13000);
-  // }
-
-
 
   useEffect(() => {
     renderTableView()
 
-    // document.addEventListener('click', onMouseClick, false);
     const _setObjectsToIntersect = []
-    console.log('gltf.scene', gltf);
     gltf.scene.traverse((child) => {
       child.isMesh && _setObjectsToIntersect.push(child)
     });
     objectsToIntersectRef.current = [..._setObjectsToIntersect];
     setObjectsToIntersect([...objectsToIntersectRef.current])
-    console.log(objectsToIntersectRef.current);
 
     const bbox = new Box3().setFromObject(gltf.scene);
     const modelBoundingBox = new Box3().setFromObject(gltf.scene);
@@ -126,18 +105,6 @@ function App() {
           />
         </Col>
         <Col span={12} className='modelContainer'>
-          <Canvas style={{ outline: 'none' }} camera={{ position: [12, 67, 190], fov: 75 }}>
-            <OrbitControls />
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <group scale={[1, 1, 1]}>
-              <primitive object={gltf?.scene} />
-            </group>
-          </Canvas>
-        </Col>
-      </Row>
-      <Row style={{ height: '1200px' }}>
-        <Col span={24}>
           <Canvas camera={{ position: [12, 67, 190], fov: 75 }}>
             <OrbitControls />
             <ambientLight />

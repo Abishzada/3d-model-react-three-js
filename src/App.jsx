@@ -16,6 +16,8 @@ function App() {
   const [openInsert, setOpenInsert] = useState(false)
   const [objectsToIntersect, setObjectsToIntersect] = useState([])
   const modelViewerRef = useRef(null);
+  const GLTFLoader = dynamic(() => import('three/addons/loaders/GLTFLoader'));
+
   const gltf = useLoader(GLTFLoader, '../buggy.gltf', undefined, (error) => console.log('error', error))
   const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   const raycaster = new Raycaster();
